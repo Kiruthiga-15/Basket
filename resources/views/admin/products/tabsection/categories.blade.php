@@ -4,53 +4,192 @@
 
     <h4 class="mb-4">Create Category</h4>
 
-    <div class="row g-3">
+    <form id="categoryForm" enctype="multipart/form-data">
 
-        <!-- Category Name -->
-        <div class="col-md-6">
-            <label class="form-label">Category Name</label>
+        @csrf
+        <!-- hidden field inside form -->
 
-            <input
-                type="text"
-                class="form-control"
-                placeholder="Enter category name"
-            >
+        <input
+            type="hidden"
+            name="edit_id"
+            id="edit_id"
+        >
+        <div class="row g-3">
+
+            <!-- Category Name -->
+            <div class="col-md-6">
+                <label class="form-label">Category Name</label>
+
+                <input
+                    type="text"
+                    name="name"
+                    class="form-control"
+                    placeholder="Enter category name"
+                >
+            </div>
+
+            <!-- Category Image -->
+            <div class="col-md-6">
+                <label class="form-label">Category Image</label>
+
+                <input
+                    type="file"
+                    name="image"
+                    class="form-control"
+                >
+            </div>
+
+            <!-- Status -->
+            <div class="col-md-6">
+                <label class="form-label">Status</label>
+
+                <select
+                    name="status"
+                    class="form-select"
+                >
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+            </div>
+
+            <!-- Description -->
+            <div class="col-12">
+                <label class="form-label">Description</label>
+
+                <textarea
+                    name="description"
+                    class="form-control"
+                    rows="4"
+                    placeholder="Enter category description"
+                ></textarea>
+            </div>
+
+            <!-- Button -->
+            <div class="col-12">
+
+                <button
+                    type="submit"
+                    class="btn btn-dark"
+                >
+                    Save Category
+                </button>
+
+            </div>
+
         </div>
 
-        <!-- Category Image -->
-        <div class="col-md-6">
-            <label class="form-label">Category Image</label>
+    </form>
 
-            <input
-                type="file"
-                class="form-control"
-            >
-        </div>
+</div>
 
-        <!-- Description -->
-        <div class="col-12">
-            <label class="form-label">Description</label>
 
-            <textarea
-                class="form-control"
-                rows="4"
-                placeholder="Enter category description"
-            ></textarea>
-        </div>
 
-        <!-- Buttons -->
-        <div class="col-12 d-flex gap-2 flex-wrap">
+<!-- ===============================
+CATEGORY TABLE
+=============================== -->
+<div class="admin-box mt-4">
 
-            <button class="btn btn-dark">
-                Save Category
-            </button>
+    <h4 class="mb-3">Category List</h4>
 
-            <button class="btn btn-outline-dark">
-                Reset
-            </button>
+    <div class="table-responsive">
 
-        </div>
+        <table class="table table-bordered align-middle">
+
+            <thead>
+
+                <tr>
+                    <th width="30%">Name</th>
+                    <th width="20%">Image</th>
+                    <th width="20%">Status</th>
+                    <th width="30%">Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @forelse($categories as $row)
+
+                <tr>
+
+                    <!-- Name -->
+                    <td>
+                        {{ $row->getName() }}
+                    </td>
+
+                    <!-- Image -->
+                    <td>
+
+                        @if($row->getImage())
+
+                            <img
+                                src="{{ asset('storage/'.$row->image) }}"
+                                width="60"
+                                height="60"
+                                style="object-fit:cover;border-radius:8px;"
+                            >
+
+                        @else
+
+                            No Image
+
+                        @endif
+
+                    </td>
+
+                    <!-- Status -->
+                    <td>
+
+                        @if($row->getStatus() == 1)
+
+                            <span class="badge bg-success">
+                                Active
+                            </span>
+
+                        @else
+
+                            <span class="badge bg-danger">
+                                Inactive
+                            </span>
+
+                        @endif
+
+                    </td>
+
+                    <!-- Action -->
+                    <td>
+
+                        <button class="btn btn-sm btn-primary editBtn" data-id="{{ $row->id }}">
+                            Edit
+                        </button>
+
+                        <button class="btn btn-sm btn-danger deleteBtn" data-id="{{ $row->id }}">
+                            Delete
+                        </button>
+
+                    </td>
+
+                </tr>
+
+                @empty
+
+                <tr>
+                    <td colspan="4" class="text-center">
+                        No Categories Found
+                    </td>
+                </tr>
+
+                @endforelse
+
+            </tbody>
+
+        </table>
 
     </div>
 
 </div>
+
+
+
+<!-- Toast -->
+<div class="toast-msg" id="toastMsg"></div>

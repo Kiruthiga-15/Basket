@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +52,15 @@ Route::middleware('admin.auth')
     Route::get('/products', function () {
         return view('admin.products.products');
     });
+    Route::get('/products', [CategoryController::class, 'index']);
+
+    Route::post('/category/store', [CategoryController::class, 'store']);
+
+    Route::get('/category/edit/{id}', [CategoryController::class, 'edit']);
+
+    Route::post('/category/update/{id}', [CategoryController::class, 'update']);
+
+    Route::delete('/category/delete/{id}', [CategoryController::class, 'destroy']);
 
     Route::get('/orders', function () {
         return view('admin.orders.orders');

@@ -74,5 +74,5 @@
 @endsection
 
 @section('page-js')
-
+<script src="{{ asset('js/admin/category.js') }}"></script>
 @endsection
