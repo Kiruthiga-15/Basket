@@ -1,0 +1,892 @@
+:root{
+    --primary:#1F1F1F;
+    --secondary:#F5EBDD;
+    --accent:#C9A227;
+    --dark:#2E2E2E;
+    --white:#ffffff;
+}
+
+body{
+    font-family:'Poppins', sans-serif;
+    background:var(--secondary);
+    color:var(--dark);
+    margin:0;
+    padding:0;
+}
+
+h1,h2,h3,h4,h5{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+}
+
+a{
+    text-decoration:none;
+    transition:0.3s ease;
+}
+
+.btn-theme{
+    background:var(--primary);
+    color:#fff;
+    border:none;
+    padding:12px 28px;
+    border-radius:8px;
+}
+
+.btn-theme:hover{
+    background:#000;
+    color:#fff;
+}
+
+.section-padding{
+    padding:80px 0;
+}
+
+/* =========================
+TOP NAVBAR
+========================= */
+.basket-top-navbar{
+    background:var(--primary);
+    color:var(--white);
+    padding:10px 0;
+    font-size:14px;
+    transition:0.3s ease;
+}
+
+.basket-topbar-left,
+.basket-topbar-right{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.basket-topbar-left span{
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.basket-topbar-right a{
+    color:#fff;
+}
+
+.basket-topbar-right a:hover{
+    color:var(--accent);
+}
+
+/* =========================
+MAIN NAVBAR
+========================= */
+.basket-main-navbar{
+    background:#fff;
+    padding:18px 0;
+    border-bottom:1px solid rgba(0,0,0,.08);
+    transition:0.3s ease;
+    z-index:999;
+}
+
+.basket-nav-logo a{
+    font-size:32px;
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    color:var(--primary);
+}
+
+.basket-nav-search form{
+    display:flex;
+}
+
+.basket-nav-search input{
+    width:100%;
+    padding:11px 14px;
+    border:1px solid #ddd;
+    border-right:none;
+    border-radius:8px 0 0 8px;
+    outline:none;
+}
+
+.basket-nav-search button{
+    border:none;
+    background:var(--primary);
+    color:#fff;
+    padding:11px 18px;
+    border-radius:0 8px 8px 0;
+}
+
+.basket-nav-menu{
+    display:flex;
+    gap:28px;
+}
+
+.basket-nav-menu a{
+    color:var(--dark);
+    font-weight:500;
+    position:relative;
+}
+
+.basket-nav-menu a::after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:-6px;
+    width:0;
+    height:2px;
+    background:var(--accent);
+    transition:0.3s ease;
+}
+
+.basket-nav-menu a:hover::after{
+    width:100%;
+}
+
+.basket-nav-icons{
+    display:flex;
+    gap:18px;
+}
+
+.basket-nav-icons a{
+    color:var(--dark);
+}
+
+.basket-nav-icons a:hover{
+    color:var(--primary);
+}
+
+/* =========================
+MOBILE MENU BUTTON
+========================= */
+.basket-mobile-menu-btn{
+    border:none;
+    background:none;
+    padding:0;
+    color:var(--dark);
+}
+
+.basket-mobile-menu-btn:hover{
+    color:var(--primary);
+}
+
+/* =========================
+MOBILE SIDEBAR
+========================= */
+.basket-mobile-sidebar{
+    position:fixed;
+    top:0;
+    left:-300px;
+    width:280px;
+    height:100%;
+    background:#fff;
+    z-index:9999;
+    transition:0.35s ease;
+    padding:25px 20px;
+    box-shadow:5px 0 18px rgba(0,0,0,.08);
+}
+
+.show-sidebar{
+    left:0;
+}
+
+.basket-sidebar-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:30px;
+}
+
+.basket-sidebar-header h5{
+    margin:0;
+    font-size:22px;
+}
+
+.basket-close-sidebar{
+    border:none;
+    background:none;
+    padding:0;
+    color:var(--dark);
+}
+
+.basket-sidebar-links{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.basket-sidebar-links a{
+    color:var(--dark);
+    font-size:16px;
+    font-weight:500;
+    padding-bottom:10px;
+    border-bottom:1px solid #eee;
+}
+
+.basket-sidebar-links a:hover{
+    color:var(--primary);
+}
+
+/* overlay */
+.basket-sidebar-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.35);
+    opacity:0;
+    visibility:hidden;
+    transition:0.3s ease;
+    z-index:9998;
+}
+
+.show-overlay{
+    opacity:1;
+    visibility:visible;
+}
+
+/* =========================
+STICKY NAVBAR
+========================= */
+.hide-topbar{
+    display:none;
+}
+
+.sticky-navbar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    background:#fff;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    animation:slideDown .3s ease;
+}
+
+@keyframes slideDown{
+    from{
+        transform:translateY(-100%);
+    }
+    to{
+        transform:translateY(0);
+    }
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+@media (max-width:991px){
+
+    .basket-nav-logo a{
+        font-size:28px;
+    }
+
+    .basket-nav-search{
+        margin-top:10px;
+    }
+}
+
+@media (max-width:767px){
+
+    .basket-main-navbar{
+        padding:14px 0;
+    }
+
+    .basket-nav-logo a{
+        font-size:24px;
+    }
+
+    .basket-nav-search input{
+        padding:10px 12px;
+    }
+
+    .basket-nav-search button{
+        padding:10px 15px;
+    }
+
+    .basket-nav-icons{
+        gap:12px;
+        justify-content:flex-end;
+    }
+}
+
+/* ===============================
+HOME BANNER SECTION
+Add in public/css/baskettheme.css
+=============================== */
+
+/* common */
+#desktopBanner,
+#mobileBanner{
+    position:relative;
+}
+
+/* desktop image */
+.banner-img-desktop{
+    width:100%;
+    height:750px;
+    object-fit:cover;
+}
+
+/* mobile image */
+.banner-img-mobile{
+    width:100%;
+    height:620px;
+    object-fit:cover;
+}
+
+/* dark overlay */
+#desktopBanner .carousel-item,
+#mobileBanner .carousel-item{
+    position:relative;
+}
+
+#desktopBanner .carousel-item::before,
+#mobileBanner .carousel-item::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.28);
+    z-index:1;
+}
+
+/* text content */
+.banner-content{
+    position:absolute;
+    top:50%;
+    left:10%;
+    transform:translateY(-50%);
+    z-index:5;
+    max-width:520px;
+    color:#fff;
+}
+
+.banner-content span{
+    display:inline-block;
+    background:var(--accent);
+    color:#111;
+    padding:8px 16px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:18px;
+}
+
+.banner-content h1{
+    font-size:58px;
+    line-height:1.15;
+    margin-bottom:18px;
+    color:#fff;
+}
+
+.banner-content p{
+    font-size:18px;
+    margin-bottom:28px;
+    color:#f3f3f3;
+}
+
+/* indicators */
+.carousel-indicators{
+    margin-bottom:28px;
+    z-index:10;
+}
+
+.carousel-indicators button{
+    width:11px !important;
+    height:11px !important;
+    border-radius:50%;
+    border:none !important;
+    margin:0 6px !important;
+    background:#fff !important;
+    opacity:0.55;
+}
+
+.carousel-indicators .active{
+    opacity:1;
+    background:var(--accent) !important;
+}
+
+/* controls optional if later added */
+.carousel-control-prev-icon,
+.carousel-control-next-icon{
+    filter:invert(1);
+}
+
+/* ===============================
+TABLET
+=============================== */
+@media (max-width:991px){
+
+    .banner-img-desktop{
+        height:620px;
+    }
+
+    .banner-content{
+        left:7%;
+        max-width:430px;
+    }
+
+    .banner-content h1{
+        font-size:42px;
+    }
+
+    .banner-content p{
+        font-size:16px;
+    }
+}
+
+/* ===============================
+MOBILE
+=============================== */
+@media (max-width:767px){
+
+    .banner-img-mobile{
+        height:540px;
+    }
+
+    .banner-content{
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        width:88%;
+        max-width:88%;
+        text-align:center;
+    }
+
+    .banner-content h1{
+        font-size:32px;
+        margin-bottom:14px;
+    }
+
+    .banner-content p{
+        font-size:15px;
+        margin-bottom:22px;
+    }
+
+    .banner-content span{
+        font-size:12px;
+        padding:7px 14px;
+    }
+
+    .carousel-indicators{
+        margin-bottom:18px;
+    }
+}
+
+/* ===============================
+FOOTER SECTION
+Add below your existing CSS
+=============================== */
+
+.site-footer{
+    background:var(--primary);
+    color:var(--white);
+    padding-top:70px;
+    margin-top:80px;
+}
+
+.footer-brand h3{
+    font-size:34px;
+    color:var(--white);
+    margin-bottom:18px;
+}
+
+.footer-brand p{
+    color:rgba(255,255,255,0.75);
+    line-height:1.8;
+    font-size:15px;
+    margin-bottom:22px;
+    max-width:320px;
+}
+
+/* Social */
+.footer-social{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.footer-social a{
+    width:42px;
+    height:42px;
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--white);
+}
+
+.footer-social a:hover{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#111;
+    transform:translateY(-3px);
+}
+
+/* Common box */
+.footer-box h5{
+    font-size:22px;
+    color:var(--white);
+    margin-bottom:20px;
+}
+
+.footer-box ul{
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+.footer-box ul li{
+    margin-bottom:12px;
+}
+
+.footer-box ul li a{
+    color:rgba(255,255,255,0.75);
+    font-size:15px;
+}
+
+.footer-box ul li a:hover{
+    color:var(--accent);
+    padding-left:4px;
+}
+
+/* Contact */
+.footer-box p{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    color:rgba(255,255,255,0.75);
+    font-size:15px;
+    line-height:1.8;
+    margin-bottom:14px;
+}
+
+.footer-box p svg{
+    min-width:18px;
+    margin-top:3px;
+}
+
+/* Bottom */
+.footer-bottom{
+    margin-top:55px;
+    border-top:1px solid rgba(255,255,255,0.12);
+    padding:22px 0;
+}
+
+.footer-bottom p{
+    color:rgba(255,255,255,0.70);
+    font-size:14px;
+}
+
+/* ===============================
+RESPONSIVE
+=============================== */
+@media (max-width:991px){
+
+    .site-footer{
+        padding-top:55px;
+    }
+
+    .footer-brand h3{
+        font-size:30px;
+    }
+}
+
+@media (max-width:767px){
+
+    .site-footer{
+        padding-top:45px;
+        margin-top:60px;
+    }
+
+    .footer-brand,
+    .footer-box{
+        text-align:left;
+    }
+
+    .footer-brand h3{
+        font-size:28px;
+    }
+
+    .footer-box h5{
+        font-size:20px;
+        margin-bottom:16px;
+    }
+
+    .footer-bottom{
+        margin-top:35px;
+        padding:18px 0;
+    }
+
+    .footer-bottom p{
+        font-size:13px;
+    }
+}
+
+
+/* ===============================
+SHOP PAGE BANNER
+Add in baskettheme.css
+=============================== */
+
+.shop-banner-section{
+    padding:70px 0 50px;
+}
+
+.shop-banner-box{
+    background:linear-gradient(
+        135deg,
+        #ffffff 0%,
+        #f8f2e8 100%
+    );
+    border-radius:22px;
+    padding:50px;
+    overflow:hidden;
+    box-shadow:0 12px 28px rgba(0,0,0,0.06);
+}
+
+.shop-tag{
+    display:inline-block;
+    background:var(--accent);
+    color:#111;
+    padding:8px 16px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:18px;
+}
+
+.shop-banner-content h1{
+    font-size:56px;
+    line-height:1.15;
+    margin-bottom:18px;
+    color:var(--primary);
+}
+
+.shop-banner-content p{
+    font-size:17px;
+    line-height:1.8;
+    color:#666;
+    max-width:520px;
+    margin-bottom:28px;
+}
+
+.shop-banner-image img{
+    height:430px;
+    object-fit:cover;
+    border-radius:18px;
+}
+
+/* ===============================
+TABLET
+=============================== */
+@media (max-width:991px){
+
+    .shop-banner-box{
+        padding:35px;
+    }
+
+    .shop-banner-content h1{
+        font-size:42px;
+    }
+
+    .shop-banner-image img{
+        height:360px;
+    }
+}
+
+/* ===============================
+MOBILE
+=============================== */
+@media (max-width:767px){
+
+    .shop-banner-section{
+        padding:45px 0 30px;
+    }
+
+    .shop-banner-box{
+        padding:24px;
+        border-radius:18px;
+    }
+
+    .shop-banner-content{
+        text-align:center;
+    }
+
+    .shop-banner-content h1{
+        font-size:32px;
+    }
+
+    .shop-banner-content p{
+        font-size:15px;
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .shop-banner-image img{
+        height:250px;
+        border-radius:14px;
+    }
+}
+
+/* ===============================
+SHOP PRODUCT SECTION
+=============================== */
+
+.shop-product-section{
+    padding:40px 0 80px;
+}
+
+/* topbar */
+.product-topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:28px;
+}
+
+.product-topbar p{
+    margin:0;
+    font-weight:500;
+}
+
+.view-switcher{
+    display:flex;
+    gap:10px;
+}
+
+.view-btn{
+    border:1px solid #ddd;
+    background:#fff;
+    padding:8px 18px;
+    border-radius:8px;
+}
+
+.view-btn.active{
+    background:var(--primary);
+    color:#fff;
+    border-color:var(--primary);
+}
+
+/* filter */
+.product-filter-box{
+    background:#fff;
+    padding:28px;
+    border-radius:16px;
+    box-shadow:0 8px 20px rgba(0,0,0,.05);
+    position:sticky;
+    top:110px;
+}
+
+.product-filter-box h4{
+    margin-bottom:22px;
+}
+
+.filter-group{
+    margin-bottom:25px;
+}
+
+.filter-group h6{
+    margin-bottom:12px;
+}
+
+.filter-group label{
+    display:block;
+    margin-bottom:10px;
+    font-size:15px;
+}
+
+/* grid */
+.product-card{
+    background:#fff;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 8px 20px rgba(0,0,0,.05);
+}
+
+.product-card img{
+    height:280px;
+    object-fit:cover;
+}
+
+.product-info{
+    padding:18px;
+}
+
+.product-info h5{
+    font-size:22px;
+    margin-bottom:8px;
+}
+
+.product-info p{
+    color:#666;
+    font-size:14px;
+}
+
+.price-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:15px;
+}
+
+.price-row span{
+    font-weight:700;
+    color:var(--primary);
+}
+
+.price-row a{
+    background:var(--primary);
+    color:#fff;
+    padding:8px 14px;
+    border-radius:8px;
+    font-size:14px;
+}
+
+/* list */
+.list-product-card{
+    background:#fff;
+    padding:18px;
+    border-radius:16px;
+    margin-bottom:22px;
+    box-shadow:0 8px 20px rgba(0,0,0,.05);
+}
+
+.list-product-card img{
+    height:240px;
+    object-fit:cover;
+    border-radius:14px;
+}
+
+.list-info h4{
+    font-size:28px;
+    margin-bottom:12px;
+}
+
+.list-info p{
+    color:#666;
+    line-height:1.8;
+}
+
+/* responsive */
+@media (max-width:991px){
+
+    .product-filter-box{
+        position:relative;
+        top:0;
+    }
+}
+
+@media (max-width:767px){
+
+    .shop-product-section{
+        padding:30px 0 60px;
+    }
+
+    .product-topbar{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .product-card img{
+        height:240px;
+    }
+
+    .list-info h4{
+        font-size:24px;
+    }
+}
