@@ -1,6 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\LoginController;
+
+/*
+|--------------------------------------------------------------------------
+| Frontend Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return view('home.home');
@@ -16,4 +23,51 @@ Route::get('/cart', function () {
 
 Route::get('/contact', function () {
     return view('contact.contact');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/admin/login', [LoginController::class, 'showLogin']);
+Route::post('/admin/login', [LoginController::class, 'login']);
+
+/*
+|--------------------------------------------------------------------------
+| Protected Admin Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('admin.auth')
+->prefix('admin')
+->group(function () {
+
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard.dashboard');
+    });
+
+    Route::get('/products', function () {
+        return view('admin.products.products');
+    });
+
+    Route::get('/orders', function () {
+        return view('admin.orders.orders');
+    });
+
+    Route::get('/customers', function () {
+        return view('admin.customers.customers');
+    });
+
+    Route::get('/settings', function () {
+        return view('admin.settings.settings');
+    });
+
+    Route::get('/adminprofile', function () {
+        return view('admin.adminprofile.profile');
+    });
+
+    Route::get('/admin/logout', [LoginController::class, 'logout']);
+
 });
