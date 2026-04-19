@@ -75,4 +75,5 @@
 
 @section('page-js')
 <script src="{{ asset('js/admin/category.js') }}"></script>
+<script src="{{ asset('js/admin/variationtype.js') }}"></script>
 @endsection

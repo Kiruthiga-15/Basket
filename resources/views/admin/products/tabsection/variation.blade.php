@@ -11,60 +11,112 @@
 
             <h4 class="mb-4">Variation Names</h4>
 
-            <div class="row g-3">
+            <form id="variationTypeForm">
 
-                <!-- Variation Name -->
-                <div class="col-12">
-                    <label class="form-label">Variation Name</label>
+                @csrf
 
-                    <input
-                        type="text"
-                        class="form-control"
-                        placeholder="Ex: Color / Size / Material"
-                    >
-                </div>
+                <input type="hidden" id="variation_edit_id">
 
-                <!-- Hint -->
-                <div class="col-12">
+                <div class="row g-3">
 
-                    <small class="text-muted">
-                        Examples:
-                        Color, Size, Storage, Material
-                    </small>
+                    <!-- Variation Name -->
+                    <div class="col-12">
+                        <label class="form-label">Variation Name</label>
 
-                </div>
-
-                <!-- Save -->
-                <div class="col-12">
-
-                    <button class="btn btn-dark w-100">
-                        Save Variation Name
-                    </button>
-
-                </div>
-
-                <!-- Existing Variation List -->
-                <div class="col-12">
-
-                    <div class="border rounded p-3 bg-light">
-
-                        <strong class="d-block mb-2">
-                            Added Variations
-                        </strong>
-
-                        <span class="badge bg-dark me-2 mb-2">
-                            Color
-                        </span>
-
-                        <span class="badge bg-dark me-2 mb-2">
-                            Size
-                        </span>
-
-                        <span class="badge bg-dark me-2 mb-2">
-                            Material
-                        </span>
-
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="name"
+                            placeholder="Ex: Color / Size / Material"
+                        >
                     </div>
+
+                    <!-- Status -->
+                    <div class="col-12">
+                        <label class="form-label">Status</label>
+
+                        <select class="form-select" name="status">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+
+                    <!-- Save -->
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-dark w-100">
+                            Save Variation Name
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+
+            <!-- ===================================
+            TABLE FROM DB
+            ==================================== -->
+            <div class="mt-4">
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th width="30%">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="variationTypeTable">
+
+                            @foreach($variationTypes as $row)
+
+                            <tr id="vt_{{ $row->id }}">
+
+                                <td>{{ $row->name }}</td>
+
+                                <td>
+
+                                    <div class="form-check form-switch">
+
+                                        <input
+                                            class="form-check-input statusToggle"
+                                            type="checkbox"
+                                            data-id="{{ $row->id }}"
+                                            {{ $row->status == 1 ? 'checked' : '' }}
+                                        >
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+
+                                    <button
+                                        class="btn btn-sm btn-primary editVariation"
+                                        data-id="{{ $row->id }}"
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        class="btn btn-sm btn-danger deleteVariation"
+                                        data-id="{{ $row->id }}"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                            @endforeach
+
+                        </tbody>
+
+                    </table>
 
                 </div>
 

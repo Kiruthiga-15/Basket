@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\VariationTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,9 +50,6 @@ Route::middleware('admin.auth')
         return view('admin.dashboard.dashboard');
     });
 
-    Route::get('/products', function () {
-        return view('admin.products.products');
-    });
     Route::get('/products', [CategoryController::class, 'index']);
 
     Route::post('/category/store', [CategoryController::class, 'store']);
@@ -63,6 +61,16 @@ Route::middleware('admin.auth')
     Route::delete('/category/delete/{id}', [CategoryController::class, 'destroy']);
 
     Route::post('/category/status/{id}',[CategoryController::class, 'changeStatus']);
+
+    Route::post('/variation-type/store', [VariationTypeController::class, 'store']);
+
+    Route::get('/variation-type/edit/{id}', [VariationTypeController::class, 'edit']);
+
+    Route::post('/variation-type/update/{id}', [VariationTypeController::class, 'update']);
+
+    Route::delete('/variation-type/delete/{id}', [VariationTypeController::class, 'destroy']);
+
+    Route::post('/variation-type/status/{id}', [VariationTypeController::class, 'status']);
 
     Route::get('/orders', function () {
         return view('admin.orders.orders');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\VariationType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -16,10 +17,11 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::latest()->get();
+        $variationTypes= VariationType::latest()->get();
 
         return view(
             'admin.products.products',
-            compact('categories')
+            compact('categories','variationTypes')
         );
     }
 
