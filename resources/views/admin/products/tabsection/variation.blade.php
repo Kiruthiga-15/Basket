@@ -137,105 +137,121 @@
 
             <h4 class="mb-4">Variation Values</h4>
 
-            <div class="row g-3">
+            <form id="variationValueForm">
+                @csrf
 
-                <!-- Select Variation -->
-                <div class="col-md-6">
-                    <label class="form-label">Select Variation</label>
+                <input type="hidden" id="variation_value_edit_id">
 
-                    <select class="form-select">
-                        <option>Select Variation Name</option>
-                        <option>Color</option>
-                        <option>Size</option>
-                        <option>Storage</option>
-                    </select>
-                </div>
+                <div class="row g-3">
 
-                <!-- Input Type -->
-                <div class="col-md-6">
-                    <label class="form-label">Value Type</label>
+                    <!-- Variation Type -->
+                    <div class="col-md-6">
+                        <label>Variation Type</label>
 
-                    <select class="form-select">
-                        <option>Select Type</option>
-                        <option>Text</option>
-                        <option>Color Picker</option>
-                    </select>
-                </div>
+                        <select name="variation_type_id" class="form-select">
+                            <option value="">Select</option>
 
-                <!-- Text Value -->
-                <div class="col-md-6">
-                    <label class="form-label">Value Name</label>
+                            @foreach($variationTypes as $type)
+                                <option value="{{ $type->id }}">
+                                    {{ $type->name }}
+                                </option>
+                            @endforeach
 
-                    <input
-                        type="text"
-                        class="form-control"
-                        placeholder="Ex: Large / Small / 128GB"
-                    >
-                </div>
+                        </select>
+                    </div>
 
-                <!-- Color -->
-                <div class="col-md-6">
-                    <label class="form-label">Choose Color</label>
+                    <!-- Value Type -->
+                    <div class="col-md-6">
+                        <label>Value Type</label>
 
-                    <input
-                        type="color"
-                        class="form-control form-control-color w-100"
-                        value="#000000"
-                    >
-                </div>
+                        <select name="value_type" id="valueType" class="form-select">
+                            <option value="text">Text</option>
+                            <option value="color">Color</option>
+                        </select>
+                    </div>
 
-                <!-- Hint -->
-                <div class="col-12">
+                    <!-- Name -->
+                    <div class="col-md-6">
+                        <input type="text" name="value_name" class="form-control" placeholder="Value Name">
+                    </div>
 
-                    <small class="text-muted">
-                        Size Example:
-                        S (Small), M (Medium), L (Large)
-                    </small>
+                    <!-- Color -->
+                    <div class="col-md-6" id="colorBox">
+                        <input type="color" name="color_code" class="form-control form-control-color w-100">
+                    </div>
 
-                </div>
+                    <!-- Status -->
+                    <div class="col-md-6">
+                        <select name="status" class="form-select">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
 
-                <!-- Save -->
-                <div class="col-12">
-
-                    <button class="btn btn-dark">
-                        Save Variation Value
-                    </button>
-
-                </div>
-
-                <!-- Existing Values -->
-                <div class="col-12">
-
-                    <div class="border rounded p-3 bg-light">
-
-                        <strong class="d-block mb-2">
-                            Added Values
-                        </strong>
-
-                        <span class="badge bg-secondary me-2 mb-2">
-                            Red
-                        </span>
-
-                        <span class="badge bg-secondary me-2 mb-2">
-                            Blue
-                        </span>
-
-                        <span class="badge bg-secondary me-2 mb-2">
-                            Large
-                        </span>
-
-                        <span class="badge bg-secondary me-2 mb-2">
-                            Small
-                        </span>
-
+                    <!-- Save -->
+                    <div class="col-12">
+                        <button class="btn btn-dark w-100" type="submit">
+                            Save Value
+                        </button>
                     </div>
 
                 </div>
+            </form>
 
-            </div>
+            <div class="mt-4">
+
+            <table class="table table-bordered">
+
+                <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Value</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+                <tbody id="variationValueTable">
+
+                @foreach($variationValues as $row)
+
+                <tr id="vv_{{ $row->id }}">
+
+                    <td>{{ $row->type->name }}</td>
+                    <td>{{ $row->value_name }}</td>
+                    <td>{{ $row->value_type }}</td>
+
+                    <td>
+                        <div class="form-check form-switch">
+
+                            <input
+                                class="form-check-input valueStatusToggle"
+                                type="checkbox"
+                                data-id="{{ $row->id }}"
+                                {{ $row->status == 1 ? 'checked' : '' }}
+                            >
+
+                        </div>
+                    </td>
+
+                    <td>
+                        <button class="editValue btn btn-primary btn-sm" data-id="{{ $row->id }}">Edit</button>
+                        <button class="deleteValue btn btn-danger btn-sm" data-id="{{ $row->id }}">Delete</button>
+                    </td>
+
+                </tr>
+
+                @endforeach
+
+                </tbody>
+
+            </table>
 
         </div>
 
+
+        </div>
     </div>
 
 </div>

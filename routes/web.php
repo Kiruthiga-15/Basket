@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\VariationTypeController;
+use App\Http\Controllers\Admin\VariationValueController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +73,14 @@ Route::middleware('admin.auth')
     Route::delete('/variation-type/delete/{id}', [VariationTypeController::class, 'destroy']);
 
     Route::post('/variation-type/status/{id}', [VariationTypeController::class, 'status']);
+
+  
+    Route::post('/variation-value/store', [VariationValueController::class, 'store']);
+    Route::get('/variation-value/edit/{id}', [VariationValueController::class, 'edit']);
+    Route::post('/variation-value/update/{id}', [VariationValueController::class, 'update']);
+    Route::delete('/variation-value/delete/{id}', [VariationValueController::class, 'destroy']);
+    Route::post('/variation-value/status/{id}', [VariationValueController::class, 'status']);
+    Route::get('/variation-value/check', [VariationValueController::class, 'check']);
 
     Route::get('/orders', function () {
         return view('admin.orders.orders');
