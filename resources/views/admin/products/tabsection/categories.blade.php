@@ -138,21 +138,18 @@ CATEGORY TABLE
                     </td>
 
                     <!-- Status -->
-                    <td>
+                    <td id="status_col_{{ $row->id }}">
 
-                        @if($row->getStatus() == 1)
+                        <div class="form-check form-switch">
 
-                            <span class="badge bg-success">
-                                Active
-                            </span>
+                            <input
+                                class="form-check-input statusToggle"
+                                type="checkbox"
+                                data-id="{{ $row->id }}"
+                                {{ $row->status == 1 ? 'checked' : '' }}
+                            >
 
-                        @else
-
-                            <span class="badge bg-danger">
-                                Inactive
-                            </span>
-
-                        @endif
+                        </div>
 
                     </td>
 
@@ -191,5 +188,3 @@ CATEGORY TABLE
 
 
 
-<!-- Toast -->
-<div class="toast-msg" id="toastMsg"></div>

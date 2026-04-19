@@ -10,5 +10,5 @@
 @endsection
 
 @section('page-js')
-<script src="{{ asset('js/shop-product.js') }}"></script>
+<script src="{{ asset('js/frontend//shop-product.js') }}"></script>
 @endsection

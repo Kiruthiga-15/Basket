@@ -62,6 +62,8 @@ Route::middleware('admin.auth')
 
     Route::delete('/category/delete/{id}', [CategoryController::class, 'destroy']);
 
+    Route::post('/category/status/{id}',[CategoryController::class, 'changeStatus']);
+
     Route::get('/orders', function () {
         return view('admin.orders.orders');
     });

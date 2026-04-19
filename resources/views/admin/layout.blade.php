@@ -148,6 +148,10 @@
 
     </div>
 
+    <!-- Global Toast -->
+    <div id="globalToast" class="global-toast">
+        <span id="globalToastMsg"></span>
+    </div>
 </div>
 
 <!-- Overlay -->
@@ -202,8 +206,42 @@ document.addEventListener('DOMContentLoaded', function () {
             e.stopPropagation();
         });
     }
-
 });
+</script>
+<script>
+function showToast(message, type = 'success')
+{
+    let toast = document.getElementById('globalToast');
+    let msg   = document.getElementById('globalToastMsg');
+
+    if (!toast || !msg) return;
+
+    msg.innerText = message;
+
+    toast.classList.remove(
+        'toast-success',
+        'toast-error',
+        'toast-warning'
+    );
+
+    if (type === 'success') {
+        toast.classList.add('toast-success');
+    }
+
+    if (type === 'error') {
+        toast.classList.add('toast-error');
+    }
+
+    if (type === 'warning') {
+        toast.classList.add('toast-warning');
+    }
+
+    toast.classList.add('show-global-toast');
+
+    setTimeout(function () {
+        toast.classList.remove('show-global-toast');
+    }, 3000);
+}
 </script>
 
 @yield('page-js')

@@ -9,5 +9,5 @@
 @endsection
 
 @section('page-js')
-<script src="{{ asset('js/home-banner.js') }}"></script>
+<script src="{{ asset('js/frontend/home-banner.js') }}"></script>
 @endsection

@@ -1,165 +1,566 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     const form = document.getElementById('categoryForm');
-    const btn = form.querySelector('button[type="submit"]');
 
-    const nameInput = form.querySelector('input[name="name"]');
-    const imgInput = form.querySelector('input[name="image"]');
+    if (!form) {
+        return;
+    }
 
-    btn.disabled = true;
+    const tbody =
+        document.querySelector(
+            '.table tbody'
+        );
 
-    /* ==========================
-    VALIDATE
-    ========================== */
-    function validateForm() {
+    const submitBtn =
+        form.querySelector(
+            'button[type="submit"]'
+        );
 
-        let editId = document.getElementById('edit_id').value;
+    const nameInput =
+        form.querySelector(
+            'input[name="name"]'
+        );
 
-        let nameOk = nameInput.value.trim() !== '';
+    const imgInput =
+        form.querySelector(
+            'input[name="image"]'
+        );
 
-        let imageOk = imgInput.files.length > 0;
+    const statusInput =
+        form.querySelector(
+            'select[name="status"]'
+        );
 
-        if (editId) {
+    const descInput =
+        form.querySelector(
+            'textarea[name="description"]'
+        );
+
+    const editIdInput =
+        document.getElementById(
+            'edit_id'
+        );
+
+    const csrfToken =
+        document.querySelector(
+            'input[name="_token"]'
+        ).value;
+
+
+    /* =====================================
+    INITIAL
+    ===================================== */
+    submitBtn.disabled = true;
+
+
+    /* =====================================
+    COMMON JSON RESPONSE
+    ===================================== */
+    async function getJsonResponse(response)
+    {
+        const text =
+            await response.text();
+
+        try {
+
+            return JSON.parse(text);
+
+        } catch (error) {
+
+            console.log(text);
+
+            throw new Error(
+                'Invalid JSON Response'
+            );
+        }
+    }
+
+
+    /* =====================================
+    VALIDATE FORM
+    ===================================== */
+    function validateForm()
+    {
+        let id =
+            editIdInput.value;
+
+        let nameOk =
+            nameInput.value.trim() !== '';
+
+        let imageOk =
+            imgInput.files.length > 0;
+
+        if (id) {
             imageOk = true;
         }
 
-        btn.disabled = !(nameOk && imageOk);
+        submitBtn.disabled =
+            !(nameOk && imageOk);
 
+        submitBtn.innerText =
+            id
+            ? 'Update Category'
+            : 'Save Category';
     }
 
-    nameInput.addEventListener('input', validateForm);
-    imgInput.addEventListener('change', validateForm);
 
-    /* ==========================
-    SUBMIT
-    ========================== */
-    form.addEventListener('submit', function (e) {
+    /* =====================================
+    RESET FORM
+    ===================================== */
+    function resetForm()
+    {
+        form.reset();
 
-        e.preventDefault();
+        editIdInput.value = '';
 
-        btn.disabled = true;
-        btn.innerText = 'Saving...';
+        submitBtn.innerText =
+            'Save Category';
 
-        let id = document.getElementById('edit_id').value;
+        validateForm();
+    }
 
-        let url = '/admin/category/store';
 
-        if (id) {
-            url = '/admin/category/update/' + id;
+    /* =====================================
+    STATUS HTML
+    ===================================== */
+    function getStatusHtml(row)
+    {
+        return `
+            <div class="form-check form-switch">
+
+                <input
+                    type="checkbox"
+                    class="form-check-input statusToggle"
+                    data-id="${row.id}"
+                    ${row.status == 1 ? 'checked' : ''}
+                >
+
+            </div>
+        `;
+    }
+
+
+    /* =====================================
+    IMAGE HTML
+    ===================================== */
+    function getImageHtml(image)
+    {
+        if (image) {
+
+            return `
+                <img
+                    src="/storage/${image}"
+                    width="60"
+                    height="60"
+                    style="
+                        object-fit:cover;
+                        border-radius:8px;
+                    "
+                >
+            `;
         }
 
-        let formData = new FormData(form);
+        return 'No Image';
+    }
 
-        fetch(url, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN':
-                    document.querySelector(
-                        'input[name="_token"]'
-                    ).value
+
+    /* =====================================
+    CREATE TABLE ROW
+    ===================================== */
+    function getRowHtml(row)
+    {
+        return `
+            <tr id="row_${row.id}">
+
+                <td>
+                    ${row.name}
+                </td>
+
+                <td>
+                    ${getImageHtml(row.image)}
+                </td>
+
+                <td>
+                    ${getStatusHtml(row)}
+                </td>
+
+                <td>
+
+                    <button
+                        class="btn btn-sm btn-primary editBtn"
+                        data-id="${row.id}"
+                    >
+                        Edit
+                    </button>
+
+                    <button
+                        class="btn btn-sm btn-danger deleteBtn"
+                        data-id="${row.id}"
+                    >
+                        Delete
+                    </button>
+
+                </td>
+
+            </tr>
+        `;
+    }
+
+
+    /* =====================================
+    TOAST SAFE
+    ===================================== */
+    function toast(message, type)
+    {
+        if (
+            typeof showToast !==
+            'undefined'
+        ) {
+
+            showToast(
+                message,
+                type
+            );
+
+        } else {
+
+            alert(message);
+        }
+    }
+
+
+    /* =====================================
+    INPUT EVENTS
+    ===================================== */
+    nameInput.addEventListener(
+        'input',
+        validateForm
+    );
+
+    imgInput.addEventListener(
+        'change',
+        validateForm
+    );
+
+
+    /* =====================================
+    SUBMIT CREATE / UPDATE
+    ===================================== */
+    form.addEventListener(
+        'submit',
+        function (e) {
+
+            e.preventDefault();
+
+            submitBtn.disabled =
+                true;
+
+            let id =
+                editIdInput.value;
+
+            let url =
+                '/admin/category/store';
+
+            submitBtn.innerText =
+                id
+                ? 'Updating...'
+                : 'Saving...';
+
+            if (id) {
+
+                url =
+                    '/admin/category/update/' +
+                    id;
             }
-        })
-        .then(res => res.json())
-        .then(data => {
 
-            showToast(data.message);
+            let formData =
+                new FormData(form);
 
-            setTimeout(() => {
-                location.reload();
-            }, 700);
-
-        });
-
-    });
-
-    /* ==========================
-    EDIT
-    ========================== */
-    document.querySelectorAll('.editBtn').forEach(btn => {
-
-        btn.addEventListener('click', function () {
-
-            let id = this.dataset.id;
-
-            fetch('/admin/category/edit/' + id)
-            .then(res => res.json())
+            fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN':
+                        csrfToken,
+                    'Accept':
+                        'application/json'
+                }
+            })
+            .then(getJsonResponse)
             .then(data => {
 
-                form.name.value = data.data.name;
-                form.description.value =
-                    data.data.description;
+                if (data.status) {
 
-                form.status.value =
-                    data.data.status;
+                    if (id) {
 
-                document.getElementById('edit_id').value =
-                    data.data.id;
+                        let oldRow =
+                            document.getElementById(
+                                'row_' + id
+                            );
 
-                btn.innerText = 'Update Category';
+                        if (oldRow) {
+
+                            oldRow.outerHTML =
+                                getRowHtml(
+                                    data.data
+                                );
+                        }
+
+                    } else {
+
+                        tbody.insertAdjacentHTML(
+                            'afterbegin',
+                            getRowHtml(
+                                data.data
+                            )
+                        );
+                    }
+
+                    toast(
+                        data.message,
+                        'success'
+                    );
+
+                    resetForm();
+
+                } else {
+
+                    toast(
+                        data.message,
+                        'error'
+                    );
+
+                    validateForm();
+                }
+
+            })
+            .catch(error => {
+
+                console.log(error);
+
+                toast(
+                    'Server Error',
+                    'error'
+                );
 
                 validateForm();
 
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-
             });
 
-        });
+        }
+    );
 
-    });
 
-    /* ==========================
-    DELETE
-    ========================== */
-    document.querySelectorAll('.deleteBtn').forEach(btn => {
+    /* =====================================
+    EVENT DELEGATION
+    EDIT / DELETE
+    ===================================== */
+    document.addEventListener(
+        'click',
+        function (e) {
 
-        btn.addEventListener('click', function () {
+            /* ==========================
+            EDIT
+            ========================== */
+            if (
+                e.target.classList.contains(
+                    'editBtn'
+                )
+            ) {
 
-            if (!confirm('Delete this category?')) {
-                return;
+                let id =
+                    e.target.dataset.id;
+
+                fetch(
+                    '/admin/category/edit/' +
+                    id,
+                    {
+                        headers: {
+                            'Accept':
+                                'application/json'
+                        }
+                    }
+                )
+                .then(getJsonResponse)
+                .then(data => {
+
+                    if (!data.status) {
+
+                        toast(
+                            'Data not found',
+                            'error'
+                        );
+
+                        return;
+                    }
+
+                    nameInput.value =
+                        data.data.name;
+
+                    descInput.value =
+                        data.data.description ??
+                        '';
+
+                    statusInput.value =
+                        data.data.status;
+
+                    editIdInput.value =
+                        data.data.id;
+
+                    imgInput.value = '';
+
+                    validateForm();
+
+                    window.scrollTo({
+                        top: 0,
+                        behavior:
+                            'smooth'
+                    });
+
+                })
+                .catch(error => {
+
+                    console.log(error);
+
+                    toast(
+                        'Edit load failed',
+                        'error'
+                    );
+
+                });
             }
 
-            let id = this.dataset.id;
+            
+            if (
+                e.target.classList.contains('statusToggle')
+            ) {
 
-            fetch('/admin/category/delete/' + id, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN':
-                        document.querySelector(
-                            'input[name="_token"]'
-                        ).value
+                let id =
+                    e.target.dataset.id;
+
+                fetch(
+                    '/admin/category/status/' + id,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        }
+                    }
+                )
+                .then(getJsonResponse)
+                .then(data => {
+
+                    if (data.status) {
+
+                        toast(
+                            data.message,
+                            'success'
+                        );
+
+                    } else {
+
+                        toast(
+                            'Failed',
+                            'error'
+                        );
+                    }
+
+                })
+                .catch(error => {
+
+                    console.log(error);
+
+                    toast(
+                        'Status Update Failed',
+                        'error'
+                    );
+
+                });
+            }
+            
+            /* ==========================
+            DELETE
+            ========================== */
+            if (
+                e.target.classList.contains(
+                    'deleteBtn'
+                )
+            ) {
+
+                let id =
+                    e.target.dataset.id;
+
+                let ok =
+                    confirm(
+                        'Delete this category?'
+                    );
+
+                if (!ok) {
+                    return;
                 }
-            })
-            .then(res => res.json())
-            .then(data => {
 
-                showToast(data.message);
+                fetch(
+                    '/admin/category/delete/' +
+                    id,
+                    {
+                        method:
+                            'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN':
+                                csrfToken,
+                            'Accept':
+                                'application/json'
+                        }
+                    }
+                )
+                .then(getJsonResponse)
+                .then(data => {
 
-                setTimeout(() => {
-                    location.reload();
-                }, 700);
+                    if (data.status) {
 
-            });
+                        let row =
+                            document.getElementById(
+                                'row_' + id
+                            );
 
-        });
+                        if (row) {
+                            row.remove();
+                        }
 
-    });
+                        toast(
+                            data.message,
+                            'success'
+                        );
+
+                    } else {
+
+                        toast(
+                            data.message,
+                            'error'
+                        );
+                    }
+
+                })
+                .catch(error => {
+
+                    console.log(error);
+
+                    toast(
+                        'Delete failed',
+                        'error'
+                    );
+
+                });
+            }
+
+        }
+    );
+
+
+    /* =====================================
+    FIRST LOAD
+    ===================================== */
+    validateForm();
 
 });
-function showToast(message)
-{
-    let toast = document.getElementById('toastMsg');
-
-    toast.innerText = message;
-
-    toast.classList.add('show-toast');
-
-    setTimeout(function () {
-
-        toast.classList.remove('show-toast');
-
-    }, 3000);
-}

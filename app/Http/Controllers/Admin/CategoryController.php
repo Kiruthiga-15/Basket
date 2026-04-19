@@ -53,7 +53,7 @@ class CategoryController extends Controller
             );
         }
 
-        Category::create([
+        $category = Category::create([
             'name'        => $request->name,
             'slug'        => Str::slug($request->name),
             'image'       => $imagePath,
@@ -63,7 +63,9 @@ class CategoryController extends Controller
 
         return response()->json([
             'status'  => true,
-            'message' => 'Category Created Successfully'
+            'message' => 'Category Created Successfully',
+            'data'    => $category
+
         ]);
     }
 
@@ -126,7 +128,9 @@ class CategoryController extends Controller
 
         return response()->json([
             'status'  => true,
-            'message' => 'Category Updated Successfully'
+            'message' => 'Category Updated Successfully',
+            'data'    => $row
+
         ]);
     }
 
@@ -147,6 +151,22 @@ class CategoryController extends Controller
         return response()->json([
             'status'  => true,
             'message' => 'Category Deleted Successfully'
+        ]);
+    }
+
+    public function changeStatus($id)
+    {
+        $row = Category::findOrFail($id);
+
+        $row->status =
+            $row->status == 1 ? 0 : 1;
+
+        $row->save();
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Status Updated',
+            'data'    => $row
         ]);
     }
 }
