@@ -156,7 +156,7 @@ CATEGORY TABLE
                     <!-- Action -->
                     <td>
 
-                        <button class="btn btn-sm btn-primary editBtn" data-id="{{ $row->id }}">
+                        <button class="btn btn-sm btn-primary categoryeditBtn" data-id="{{ $row->id }}">
                             Edit
                         </button>
 

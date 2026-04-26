@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+function initCategory() {
 
     const form = document.getElementById('categoryForm');
 
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td>
 
                     <button
-                        class="btn btn-sm btn-primary editBtn"
+                        class="btn btn-sm btn-primary categoryeditBtn"
                         data-id="${row.id}"
                     >
                         Edit
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ========================== */
             if (
                 e.target.classList.contains(
-                    'editBtn'
+                    'categoryeditBtn'
                 )
             ) {
 
@@ -447,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             'Accept': 'application/json'
                         }
                     }
-                )
+                ) 
                 .then(getJsonResponse)
                 .then(data => {
 
@@ -563,4 +563,4 @@ document.addEventListener('DOMContentLoaded', function () {
     ===================================== */
     validateForm();
 
-});
+}

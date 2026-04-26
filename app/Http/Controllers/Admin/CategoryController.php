@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\VariationType;
 use App\Models\VariationValue;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -20,10 +21,15 @@ class CategoryController extends Controller
         $categories = Category::latest()->get();
         $variationTypes= VariationType::latest()->get();
         $variationValues= VariationValue::latest()->get();
+        $products = Product::with([
+            'category',
+            'sizeValue',
+            'colorValue'
+        ])->latest()->get();
         
         return view(
             'admin.products.products',
-            compact('categories','variationTypes','variationValues')
+            compact('categories','variationTypes','variationValues','products')
         );
     }
 

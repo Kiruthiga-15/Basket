@@ -77,5 +77,35 @@
 <script src="{{ asset('js/admin/category.js') }}"></script>
 <script src="{{ asset('js/admin/variationtype.js') }}"></script>
 <script src="{{ asset('js/admin/variationvalue.js') }}"></script>
+<script src="{{ asset('js/admin/product.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
+    // ✅ 1. RUN DEFAULT ACTIVE TAB (Categories)
+    initCategory();
+
+    // ✅ 2. LISTEN TAB SWITCH
+    const tabs = document.querySelectorAll('#productTab button');
+
+    tabs.forEach(tab => {
+
+        tab.addEventListener('shown.bs.tab', function (e) {
+
+            let target = e.target.getAttribute('data-bs-target');
+
+            console.log('Active Tab:', target);
+
+            // ✅ Category tab
+            if (target === '#tabCategories') {
+                initCategory();
+            }
+
+            // (next we will add product + variation here later)
+
+        });
+
+    });
+
+});
+</script>
 @endsection
