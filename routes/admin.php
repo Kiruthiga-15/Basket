@@ -58,6 +58,7 @@ Route::middleware('admin.auth')->group(function () {
     Route::post('/products/update/{id}', [ProductController::class, 'update']);
     Route::delete('/products/delete/{id}', [ProductController::class, 'destroy']);
     Route::post('/products/status/{id}', [ProductController::class, 'changeStatus']);
+    Route::delete('/products/delete-image/{id}', [ProductController::class, 'deleteImage']);
 
     // OTHER PAGES
     Route::get('/orders', fn() => view('admin.orders.orders'));

@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         preview.innerHTML = '';
         galleryPreview.innerHTML = '';
+        document.getElementById('existingGallery').innerHTML = '';
 
         finalPrice.value = '';
 
@@ -144,6 +145,34 @@ document.addEventListener('DOMContentLoaded', function () {
             'Save Product';
 
         validateForm();
+    }
+
+
+    /* ======================
+       DELETE GALLERY IMAGE
+    ====================== */
+    function deleteGalleryImage(imageId, container)
+    {
+        fetch('/admin/products/delete-image/' + imageId, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status) {
+                container.remove();
+                toast('Image deleted successfully', 'success');
+            } else {
+                toast('Failed to delete image', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            toast('Error deleting image', 'error');
+        });
     }
 
 
@@ -213,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 );
 
             });
-
+ 
         }
     ); 
 
@@ -572,21 +601,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     galleryPreview.innerHTML = '';
 
-                    if (d.images && d.images.length > 0) {
+                    // Populate existing gallery with delete buttons
+                    const existingGallery = document.getElementById('existingGallery');
+                    existingGallery.innerHTML = '';
 
+                    if (d.images && d.images.length > 0) {
                         d.images.forEach(imgObj => {
+                            const container = document.createElement('div');
+                            container.style.position = 'relative';
+                            container.style.display = 'inline-block';
+                            container.style.margin = '4px';
 
                             const img = document.createElement('img');
-
                             img.src = '/storage/' + imgObj.image;
-
                             img.style.width = '70px';
                             img.style.height = '70px';
                             img.style.objectFit = 'cover';
                             img.style.borderRadius = '8px';
-                            img.style.margin = '4px';
 
-                            galleryPreview.appendChild(img);
+                            const deleteBtn = document.createElement('button');
+                            deleteBtn.type = 'button';
+                            deleteBtn.innerHTML = '×';
+                            deleteBtn.style.position = 'absolute';
+                            deleteBtn.style.top = '-5px';
+                            deleteBtn.style.right = '-5px';
+                            deleteBtn.style.background = 'red';
+                            deleteBtn.style.color = 'white';
+                            deleteBtn.style.border = 'none';
+                            deleteBtn.style.borderRadius = '50%';
+                            deleteBtn.style.width = '20px';
+                            deleteBtn.style.height = '20px';
+                            deleteBtn.style.cursor = 'pointer';
+                            deleteBtn.style.fontSize = '14px';
+                            deleteBtn.style.lineHeight = '1';
+                            deleteBtn.dataset.imageId = imgObj.id;
+
+                            deleteBtn.addEventListener('click', function() {
+                                if (confirm('Are you sure you want to delete this image?')) {
+                                    deleteGalleryImage(this.dataset.imageId, container);
+                                }
+                            });
+
+                            container.appendChild(img);
+                            container.appendChild(deleteBtn);
+                            existingGallery.appendChild(container);
                         });
                     }
 

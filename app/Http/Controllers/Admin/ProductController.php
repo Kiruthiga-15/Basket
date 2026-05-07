@@ -180,13 +180,7 @@ class ProductController extends Controller
 
         if ($request->hasFile('gallery')) {
 
-            // delete old
-            foreach ($row->images as $img) {
-                Storage::disk('public')->delete($img->image);
-                $img->delete();
-            }
-
-            // save new
+            // save new images (don't delete existing ones)
             foreach ($request->file('gallery') as $file) {
 
                 $name = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
@@ -246,6 +240,25 @@ class ProductController extends Controller
             'status' => true,
             'message' => 'Status Updated',
             'data' => $row
+        ]);
+    }
+
+    /* ==========================
+       DELETE IMAGE
+    ========================== */
+    public function deleteImage($id)
+    {
+        $image = ProductImage::findOrFail($id);
+
+        if ($image->image) {
+            Storage::disk('public')->delete($image->image);
+        }
+
+        $image->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Image Deleted Successfully'
         ]);
     }
 }

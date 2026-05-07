@@ -5,7 +5,7 @@
     <h4 class="mb-4">
         Create Product
     </h4>
-
+ 
     <form
         id="productForm"
         enctype="multipart/form-data"
@@ -286,6 +286,10 @@
                     multiple
                     class="form-control"
                 >
+
+                <!-- Existing Images Container -->
+                <div id="existingGallery" class="mt-2 d-flex flex-wrap"></div>
+
                 <div
                     id="galleryPreview"
                     class="mt-2 d-flex flex-wrap"
