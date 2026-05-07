@@ -46,7 +46,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect('/shop')->with('success', 'Account created successfully!');
+        return redirect('/shop')->with('success', '✓ Account created successfully! Welcome!');
     }
 
     /* ==========================
@@ -62,7 +62,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            return redirect('/shop')->with('success', 'Logged in successfully!');
+            return redirect('/shop')->with('success', '✓ Logged in successfully! Welcome ' . Auth::user()->name . '!');
         }
 
         return back()->withErrors([
@@ -81,6 +81,6 @@ class AuthController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('success', 'Logged out successfully!');
+        return redirect('/')->with('success', '✓ Logged out successfully!');
     }
 }

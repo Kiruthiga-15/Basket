@@ -100,6 +100,23 @@
 
 <body>
 
+<!-- Flash Messages -->
+<div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9998; width: 100%; max-width: 400px; pointer-events: none;">
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert" style="pointer-events: auto;">
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="pointer-events: auto;">
+            <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+</div>
+
 @include('commonsection.navbar')
 <!-- PAGE CONTENT -->
 <main>
@@ -145,19 +162,36 @@ const closeBtn  = document.getElementById('closeSidebar');
 const sidebar   = document.getElementById('mobileSidebar');
 const overlay   = document.getElementById('sidebarOverlay');
 
-openBtn.addEventListener('click', function () {
-    sidebar.classList.add('show-sidebar');
-    overlay.classList.add('show-overlay');
-});
+if (openBtn) {
+    openBtn.addEventListener('click', function () {
+        sidebar.classList.add('show-sidebar');
+        overlay.classList.add('show-overlay');
+    });
+}
 
-closeBtn.addEventListener('click', function () {
-    sidebar.classList.remove('show-sidebar');
-    overlay.classList.remove('show-overlay');
-});
+if (closeBtn) {
+    closeBtn.addEventListener('click', function () {
+        sidebar.classList.remove('show-sidebar');
+        overlay.classList.remove('show-overlay');
+    });
+}
 
-overlay.addEventListener('click', function () {
-    sidebar.classList.remove('show-sidebar');
-    overlay.classList.remove('show-overlay');
+if (overlay) {
+    overlay.addEventListener('click', function () {
+        sidebar.classList.remove('show-sidebar');
+        overlay.classList.remove('show-overlay');
+    });
+}
+
+/* Auto-dismiss alerts */
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        }, 4000);
+    });
 });
 </script>
 @yield('page-js')

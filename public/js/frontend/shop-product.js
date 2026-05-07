@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             if (data.status) {
                 btn.classList.add('active');
-                showWishlistToast('Added to wishlist', 'success');
+                showWishlistToast('❤️ Added to wishlist', 'success');
             } else {
                 showWishlistToast(data.message || 'Error adding to wishlist', 'error');
             }
@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             if (data.status) {
                 btn.classList.remove('active');
-                showWishlistToast('Removed from wishlist', 'success');
+                showWishlistToast('💔 Removed from wishlist', 'success');
             } else {
                 showWishlistToast('Error removing from wishlist', 'error');
             }
@@ -305,24 +305,25 @@ document.addEventListener('DOMContentLoaded', function () {
     function showWishlistToast(message, type) {
         const toast = document.createElement('div');
         toast.className = `wishlist-toast wishlist-toast-${type}`;
-        toast.textContent = message;
+        toast.innerHTML = message;
         toast.style.cssText = `
             position: fixed;
-            bottom: 20px;
+            bottom: 30px;
             right: 20px;
             background: ${type === 'success' ? '#28a745' : '#dc3545'};
             color: white;
-            padding: 12px 20px;
-            border-radius: 5px;
-            z-index: 9999;
+            padding: 14px 20px;
+            border-radius: 6px;
+            z-index: 10000;
             font-size: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         `;
 
         document.body.appendChild(toast);
 
         setTimeout(() => {
-            toast.classList.add('slideOut');
+            toast.style.animation = 'slideOut 0.3s ease';
             setTimeout(() => {
                 if (document.body.contains(toast)) {
                     document.body.removeChild(toast);
