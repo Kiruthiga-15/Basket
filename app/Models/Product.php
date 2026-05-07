@@ -52,6 +52,27 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class);
     }
+
+    public function variationTypeSize()
+    {
+        return $this->belongsTo(VariationType::class, 'variation_type_size_id');
+    }
+
+    public function variationValueSize()
+    {
+        return $this->belongsTo(VariationValue::class, 'variation_value_size_id');
+    }
+
+    public function variationTypeColor()
+    {
+        return $this->belongsTo(VariationType::class, 'variation_type_color_id');
+    }
+
+    public function variationValueColor()
+    {
+        return $this->belongsTo(VariationValue::class, 'variation_value_color_id');
+    }
+
     // Size Value
     public function sizeValue()
     {

@@ -14,7 +14,88 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <link rel="stylesheet" href="{{ asset('css/baskettheme.css') }}">
+
+<meta name="csrf-token" content="{{ csrf_token() }}">
+@if(Auth::check())
+<meta name="user-id" content="{{ Auth::id() }}">
+@endif
+
+<style>
+    .product-image-container {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .wishlist-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: white;
+        border: 2px solid #ddd;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: #999;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+
+    .wishlist-btn:hover {
+        border-color: #ff0000;
+        color: #ff0000;
+        background: #fff5f5;
+    }
+
+    .wishlist-btn.active {
+        border-color: #ff0000;
+        color: #ff0000;
+        background: #fff5f5;
+    }
+
+    .wishlist-btn i {
+        pointer-events: none;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+    }
+
+    .wishlist-toast {
+        animation: slideIn 0.3s ease;
+    }
+
+    .wishlist-toast.slideOut {
+        animation: slideOut 0.3s ease;
+    }
+</style>
 </head>
 
 <body>

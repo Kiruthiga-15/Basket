@@ -52,7 +52,23 @@ MAIN NAVBAR
     <div class="col-2 col-md-2 text-end order-md-4">
         <div class="basket-nav-icons justify-content-end">
             <a href="/cart"><i data-lucide="shopping-cart"></i></a>
-            <a href="#"><i data-lucide="user"></i></a>
+            @if(Auth::check())
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <i data-lucide="user"></i>
+                    </button>
+                    <div class="user-dropdown-menu">
+                        <a href="/wishlist">Wishlist</a>
+                        <a href="/profile">Profile</a>
+                        <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+                        <form id="logoutForm" method="POST" action="{{ route('logout') }}" style="display: none;">
+                            @csrf
+                        </form>
+                    </div>
+                </div>
+            @else
+                <a href="/login" class="login-link"><i data-lucide="user"></i></a>
+            @endif
         </div>
     </div>
 
@@ -97,6 +113,17 @@ MOBILE SIDEBAR
     <div class="basket-sidebar-links">
         <a href="/">Home</a>
         <a href="/shop">Shop</a>
+        @if(Auth::check())
+            <a href="/wishlist">Wishlist</a>
+            <a href="/profile">Profile</a>
+            <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Logout</a>
+            <form id="logoutForm" method="POST" action="{{ route('logout') }}" style="display: none;">
+                @csrf
+            </form>
+        @else
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+        @endif
     </div>
 
 </div>
