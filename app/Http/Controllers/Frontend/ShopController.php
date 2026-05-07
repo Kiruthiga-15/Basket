@@ -55,8 +55,15 @@ class ShopController extends Controller
 
         $products = $query->paginate(12);
 
+        // Get user's wishlisted product IDs
+        $wishlistedProductIds = [];
+        if (Auth::check()) {
+            $wishlistedProductIds = Auth::user()->wishlists->pluck('product_id')->toArray();
+        }
+
         return response()->json([
             'products' => $products,
+            'wishlisted' => $wishlistedProductIds,
             'pagination' => [
                 'current_page' => $products->currentPage(),
                 'last_page' => $products->lastPage(),

@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch('/api/products?' + params.toString())
             .then(response => response.json())
             .then(data => {
-                updateProductViews(data.products);
+                updateProductViews(data.products, data.wishlisted || []);
                 updatePagination(data.pagination);
             })
             .catch(error => {
@@ -97,20 +97,20 @@ document.addEventListener('DOMContentLoaded', function () {
         loadProducts();
     }
 
-    function updateProductViews(products) {
+    function updateProductViews(products, wishlistedIds = []) {
         const gridContainer = document.getElementById('productGridContainer');
         const listContainer = document.getElementById('productListContainer');
 
         if (gridContainer) {
-            gridContainer.innerHTML = generateGridHTML(products.data);
+            gridContainer.innerHTML = generateGridHTML(products.data, wishlistedIds);
         }
 
         if (listContainer) {
-            listContainer.innerHTML = generateListHTML(products.data);
+            listContainer.innerHTML = generateListHTML(products.data, wishlistedIds);
         }
     }
 
-    function generateGridHTML(products) {
+    function generateGridHTML(products, wishlistedIds = []) {
         if (!products || products.length === 0) {
             return `
                 <div class="col-12">
@@ -122,7 +122,9 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
         }
 
-        return products.map(product => `
+        return products.map(product => {
+            const isWishlisted = wishlistedIds.includes(product.id);
+            return `
             <div class="col-12 col-md-6 col-xl-4">
                 <div class="product-card">
                     <div class="product-image-container">
@@ -131,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             class="img-fluid w-100"
                             alt="${product.name}"
                         >
-                        <button class="wishlist-btn" data-product-id="${product.id}" type="button">
+                        <button class="wishlist-btn ${isWishlisted ? 'active' : ''}" data-product-id="${product.id}" type="button">
                             <i class="fas fa-heart"></i>
                         </button>
                     </div>
@@ -154,10 +156,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
     }
 
-    function generateListHTML(products) {
+    function generateListHTML(products, wishlistedIds = []) {
         if (!products || products.length === 0) {
             return `
                 <div class="col-12">
@@ -169,7 +171,9 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
         }
 
-        return products.map(product => `
+        return products.map(product => {
+            const isWishlisted = wishlistedIds.includes(product.id);
+            return `
             <div class="list-product-card">
                 <div class="row align-items-center g-3">
                     <div class="col-12 col-md-4">
@@ -179,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 class="img-fluid w-100"
                                 alt="${product.name}"
                             >
-                            <button class="wishlist-btn" data-product-id="${product.id}" type="button">
+                            <button class="wishlist-btn ${isWishlisted ? 'active' : ''}" data-product-id="${product.id}" type="button">
                                 <i class="fas fa-heart"></i>
                             </button>
                         </div>
@@ -208,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
     }
 
     function updatePagination(pagination) {
@@ -236,7 +240,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function toggleWishlist(productId, btn) {
         if (!isLoggedIn) {
-            alert('Please login to add items to wishlist');
+            showWishlistToast('Please login to add items to wishlist', 'warning');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 1500);
             return;
         }
 
