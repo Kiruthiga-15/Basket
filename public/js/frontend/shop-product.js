@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             if (data.status) {
-                btn.classList.add('active');
+                syncWishlistButtons(productId, true);
                 showWishlistToast('❤️ Added to wishlist', 'success');
             } else {
                 showWishlistToast(data.message || 'Error adding to wishlist', 'error');
@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             if (data.status) {
-                btn.classList.remove('active');
+                syncWishlistButtons(productId, false);
                 showWishlistToast('💔 Removed from wishlist', 'success');
             } else {
                 showWishlistToast('Error removing from wishlist', 'error');
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
             position: fixed;
             bottom: 30px;
             right: 20px;
-            background: ${type === 'success' ? '#28a745' : '#dc3545'};
+            background: ${type === 'success' ? '#28a745' : type === 'warning' ? '#ff9800' : '#dc3545'};
             color: white;
             padding: 14px 20px;
             border-radius: 6px;
@@ -337,6 +337,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }, 300);
         }, 3000);
+    }
+
+    function syncWishlistButtons(productId, isActive) {
+        const buttons = document.querySelectorAll(`.wishlist-btn[data-product-id="${productId}"]`);
+        buttons.forEach(button => {
+            if (isActive) {
+                button.classList.add('active');
+            } else {
+                button.classList.remove('active');
+            }
+        });
     }
 
 });
