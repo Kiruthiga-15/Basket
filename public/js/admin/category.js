@@ -3,6 +3,11 @@ function initCategory() {
     const form = document.getElementById('categoryForm');
 
     if (!form) {
+            if (window.categoryInitDone) {
+                validateForm();
+                return;
+            }
+            window.categoryInitDone = true;
         return;
     }
 
@@ -286,8 +291,20 @@ function initCategory() {
                         'application/json'
                 }
             })
-            .then(getJsonResponse)
-            .then(data => {
+            .then(async response => {
+                const data = await getJsonResponse(response);
+
+                if (!response.ok) {
+                    let message = data.message || 'Request failed';
+                    if (data.errors) {
+                        message = Object.values(data.errors)
+                            .flat()
+                            .join(' ');
+                    }
+                    toast(message, 'error');
+                    validateForm();
+                    return;
+                }
 
                 if (data.status) {
 
@@ -467,7 +484,7 @@ function initCategory() {
                     }
 
                 })
-                .catch(error => {
+                    .catch(error => {
 
                     console.log(error);
 
@@ -483,13 +500,13 @@ function initCategory() {
             DELETE
             ========================== */
             if (
-                e.target.classList.contains(
-                    'deleteBtn'
-                )
+                e.target.closest('.deleteBtn')
             ) {
 
+                const deleteBtn = e.target.closest('.deleteBtn');
+
                 let id =
-                    e.target.dataset.id;
+                    deleteBtn.dataset.id;
 
                 let ok =
                     confirm(
@@ -523,7 +540,6 @@ function initCategory() {
                             document.getElementById(
                                 'row_' + id
                             );
-
                         if (row) {
                             row.remove();
                         }
