@@ -33,9 +33,9 @@
     </div>
 
     <!-- Apply Filters Button -->
-    <div class="filter-group">
-        <button id="applyFiltersBtn" class="btn btn-primary w-100">Apply Filters</button>
-        <button id="clearFiltersBtn" class="btn btn-outline-secondary w-100 mt-2">Clear Filters</button>
+    <div class="filter-group filter-actions">
+        <button id="applyFiltersBtn" class="btn btn-theme w-100">Apply Filters</button>
+        <button id="clearFiltersBtn" class="btn btn-theme-outline w-100 mt-2">Clear Filters</button>
     </div>
 
 </div>

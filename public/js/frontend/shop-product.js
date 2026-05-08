@@ -34,9 +34,35 @@ document.addEventListener('DOMContentLoaded', function () {
     const applyFiltersBtn = document.getElementById('applyFiltersBtn');
     const clearFiltersBtn = document.getElementById('clearFiltersBtn');
 
+    let filterDebounce = null;
+
     if (applyFiltersBtn) {
         applyFiltersBtn.addEventListener('click', function() {
             loadProducts();
+        });
+    }
+
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', function() {
+            debounceLoadProducts();
+        });
+    }
+
+    if (priceMinFilter) {
+        priceMinFilter.addEventListener('input', function() {
+            debounceLoadProducts();
+        });
+    }
+
+    if (priceMaxFilter) {
+        priceMaxFilter.addEventListener('input', function() {
+            debounceLoadProducts();
+        });
+    }
+
+    if (searchFilter) {
+        searchFilter.addEventListener('input', function() {
+            debounceLoadProducts();
         });
     }
 
@@ -222,6 +248,15 @@ document.addEventListener('DOMContentLoaded', function () {
             // You can implement pagination HTML generation here
             console.log('Pagination:', pagination);
         }
+    }
+
+    function debounceLoadProducts() {
+        if (filterDebounce) {
+            clearTimeout(filterDebounce);
+        }
+        filterDebounce = setTimeout(() => {
+            loadProducts();
+        }, 500);
     }
 
     // Check if user is logged in
