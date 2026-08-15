@@ -33,10 +33,29 @@ document.addEventListener('DOMContentLoaded', function () {
             'input[name="price"]'
         );
 
+    const skuInput =
+        form.querySelector(
+            'input[name="sku"]'
+        );
+
+    const stockInput =
+        form.querySelector(
+            'input[name="stock"]'
+        );
+
     const categoryInput =
         form.querySelector(
             'select[name="category_id"]'
         );
+
+    const productTypeInput =
+        document.getElementById('productType');
+
+    const normalProductFields =
+        document.getElementById('normalProductFields');
+
+    const variableProductFields =
+        document.getElementById('variableProductFields');
 
     const mainImage =
         form.querySelector(
@@ -107,8 +126,57 @@ document.addEventListener('DOMContentLoaded', function () {
     {
         let ok =
             nameInput.value.trim() !== '' &&
-            priceInput.value.trim() !== '' &&
             categoryInput.value !== '';
+
+        const selectedType =
+            productTypeInput.value;
+
+        if (
+            selectedType === 'normal'
+        ) {
+
+            ok = ok &&
+                priceInput.value.trim() !== '' &&
+                skuInput.value.trim() !== '' &&
+                stockInput.value.trim() !== '';
+
+        } else if (
+            selectedType === 'variable'
+        ) {
+
+            // For variable products, check if at least one variation row exists
+            const variationRows =
+                document.querySelectorAll(
+                    '#variationTable tbody tr'
+                );
+
+            ok = ok && variationRows.length > 0;
+
+            // Validate each variation row
+            variationRows.forEach(row => {
+
+                const skuInput =
+                    row.querySelector('.sku-input');
+
+                const priceInput =
+                    row.querySelector('.price-input');
+
+                const stockInput =
+                    row.querySelector('.stock-input');
+
+                if (
+                    skuInput.value.trim() === '' ||
+                    priceInput.value.trim() === '' ||
+                    stockInput.value.trim() === ''
+                ) {
+
+                    ok = false;
+
+                }
+
+            });
+
+        }
 
         if (
             !editId.value &&
@@ -242,11 +310,391 @@ document.addEventListener('DOMContentLoaded', function () {
                 );
 
             });
- 
+
         }
     ); 
 
 
+    /* ======================
+       PRODUCT TYPE CHANGE
+    ====================== */
+    productTypeInput.addEventListener(
+        'change',
+        function () {
+
+            const selectedType =
+                this.value;
+
+            if (
+                selectedType === 'normal'
+            ) {
+
+                normalProductFields.style.display = 'block';
+                variableProductFields.style.display = 'none';
+
+            } else if (
+                selectedType === 'variable'
+            ) {
+
+                normalProductFields.style.display = 'none';
+                variableProductFields.style.display = 'block';
+
+            } else {
+
+                normalProductFields.style.display = 'none';
+                variableProductFields.style.display = 'none';
+
+            }
+
+            validateForm();
+
+        }
+    );
+
+    // Initialize product type display
+    const initialType =
+        productTypeInput.value;
+
+    if (
+        initialType === 'normal'
+    ) {
+
+        normalProductFields.style.display = 'block';
+        variableProductFields.style.display = 'none';
+
+    } else if (
+        initialType === 'variable'
+    ) {
+
+        normalProductFields.style.display = 'none';
+        variableProductFields.style.display = 'block';
+
+    } else {
+
+        normalProductFields.style.display = 'none';
+        variableProductFields.style.display = 'none';
+
+    }
+
+
+    /* ======================
+       VARIATION MANAGEMENT
+    ====================== */
+    const variationTable =
+        document.getElementById(
+            'variationTable'
+        );
+
+    const addVariationTypeBtn =
+        document.getElementById(
+            'addVariationTypeBtn'
+        );
+
+    const generateVariationsBtn =
+        document.getElementById(
+            'generateVariationsBtn'
+        );
+
+    // Add variation row
+    function addVariationRow(
+        size = '',
+        color = '',
+        sku = '',
+        price = '',
+        discountPercent = '',
+        stock = ''
+    ) {
+
+        const tbody =
+            variationTable.querySelector(
+                'tbody'
+            );
+
+        const row =
+            document.createElement('tr');
+
+        // Get variation data from button attributes
+        const variationTypesData =
+            JSON.parse(
+                addVariationTypeBtn.getAttribute(
+                    'data-variation-types'
+                ) || '[]'
+            );
+
+        const variationValuesData =
+            JSON.parse(
+                addVariationTypeBtn.getAttribute(
+                    'data-variation-values'
+                ) || '[]'
+            );
+
+        // Build size options
+        let sizeOptions = '<option value="">Select Size</option>';
+
+        variationTypesData.forEach(type => {
+
+            if (type.name.toLowerCase() === 'size') {
+
+                variationValuesData.forEach(value => {
+
+                    if (value.variation_type_id === type.id) {
+
+                        const selected =
+                            value.id == size ? 'selected' : '';
+
+                        sizeOptions +=
+                            `<option value="${value.id}" ${selected}>${value.value}</option>`;
+
+                    }
+
+                });
+
+            }
+
+        });
+
+        // Build color options
+        let colorOptions = '<option value="">Select Color</option>';
+
+        variationTypesData.forEach(type => {
+
+            if (type.name.toLowerCase() === 'color') {
+
+                variationValuesData.forEach(value => {
+
+                    if (value.variation_type_id === type.id) {
+
+                        const selected =
+                            value.id == color ? 'selected' : '';
+
+                        colorOptions +=
+                            `<option value="${value.id}" ${selected}>${value.value}</option>`;
+
+                    }
+
+                });
+
+            }
+
+        });
+
+        row.innerHTML = `
+            <td>
+                <select class="form-select size-select">
+                    ${sizeOptions}
+                </select>
+            </td>
+            <td>
+                <select class="form-select color-select">
+                    ${colorOptions}
+                </select>
+            </td>
+            <td>
+                <input type="text" class="form-control sku-input" value="${sku}">
+            </td>
+            <td>
+                <input type="number" class="form-control price-input" step="0.01" value="${price}">
+            </td>
+            <td>
+                <input type="number" class="form-control discount-percent-input" step="0.01" value="${discountPercent}">
+            </td>
+            <td>
+                <input type="number" class="form-control discount-amount-input" step="0.01" readonly>
+            </td>
+            <td>
+                <input type="number" class="form-control stock-input" value="${stock}">
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm remove-variation">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+
+        tbody.appendChild(row);
+
+        // Add event listeners for this row
+        const discountPercentInput =
+            row.querySelector('.discount-percent-input');
+
+        const priceInput =
+            row.querySelector('.price-input');
+
+        const discountAmountInput =
+            row.querySelector('.discount-amount-input');
+
+        // Calculate discount amount when price or discount percent changes
+        function calculateDiscountAmount() {
+
+            const price =
+                parseFloat(priceInput.value) || 0;
+
+            const discountPercent =
+                parseFloat(discountPercentInput.value) || 0;
+
+            const discountAmount =
+                price * discountPercent / 100;
+
+            discountAmountInput.value =
+                discountAmount.toFixed(2);
+
+        }
+
+        priceInput.addEventListener(
+            'input',
+            calculateDiscountAmount
+        );
+
+        discountPercentInput.addEventListener(
+            'input',
+            calculateDiscountAmount
+        );
+
+        // Remove row
+        row.querySelector('.remove-variation').addEventListener(
+            'click',
+            function () {
+
+                row.remove();
+                validateForm();
+
+            }
+        );
+
+        validateForm();
+
+    }
+
+    // Add variation type button
+    if (addVariationTypeBtn) {
+
+        addVariationTypeBtn.addEventListener(
+            'click',
+            function () {
+
+                addVariationRow();
+
+            }
+        );
+
+    }
+
+    // Generate variations button
+    if (generateVariationsBtn) {
+
+        generateVariationsBtn.addEventListener(
+            'click',
+            function () {
+
+                const variationTypesData =
+                    JSON.parse(
+                        addVariationTypeBtn.getAttribute(
+                            'data-variation-types'
+                        ) || '[]'
+                    );
+
+                const variationValuesData =
+                    JSON.parse(
+                        addVariationTypeBtn.getAttribute(
+                            'data-variation-values'
+                        ) || '[]'
+                    );
+
+                // Get size and color values
+                let sizes = [];
+                let colors = [];
+
+                variationTypesData.forEach(type => {
+
+                    if (type.name.toLowerCase() === 'size') {
+
+                        variationValuesData.forEach(value => {
+
+                            if (value.variation_type_id === type.id) {
+
+                                sizes.push(value);
+
+                            }
+
+                        });
+
+                    } else if (type.name.toLowerCase() === 'color') {
+
+                        variationValuesData.forEach(value => {
+
+                            if (value.variation_type_id === type.id) {
+
+                                colors.push(value);
+
+                            }
+
+                        });
+
+                    }
+
+                });
+
+                // Clear existing rows
+                variationTable.querySelector('tbody').innerHTML = '';
+
+                // Generate combinations
+                if (sizes.length > 0 && colors.length > 0) {
+
+                    sizes.forEach(size => {
+
+                        colors.forEach(color => {
+
+                            addVariationRow(
+                                size.id,
+                                color.id,
+                                '', // sku
+                                '', // price
+                                '', // discountPercent
+                                ''  // stock
+                            );
+
+                        });
+
+                    });
+
+                } else if (sizes.length > 0) {
+
+                    sizes.forEach(size => {
+
+                        addVariationRow(
+                            size.id,
+                            '', // color
+                            '', // sku
+                            '', // price
+                            '', // discountPercent
+                            ''  // stock
+                        );
+
+                    });
+
+                } else if (colors.length > 0) {
+
+                    colors.forEach(color => {
+
+                        addVariationRow(
+                            '', // size
+                            color.id,
+                            '', // sku
+                            '', // price
+                            '', // discountPercent
+                            ''  // stock
+                        );
+
+                    });
+
+                }
+
+                toast('Variations generated successfully');
+
+            }
+        );
+
+    }
     /* ======================
        DISCOUNT PRICE
     ====================== */
@@ -412,6 +860,75 @@ document.addEventListener('DOMContentLoaded', function () {
 
             let formData =
                 new FormData(form);
+
+            // Add variation data for variable products
+            const selectedType =
+                productTypeInput.value;
+
+            if (
+                selectedType === 'variable'
+            ) {
+
+                const variationRows =
+                    variationTable.querySelectorAll(
+                        'tbody tr'
+                    );
+
+                variationRows.forEach(
+                    (row, index) => {
+
+                        const sizeSelect =
+                            row.querySelector('.size-select');
+
+                        const colorSelect =
+                            row.querySelector('.color-select');
+
+                        const skuInput =
+                            row.querySelector('.sku-input');
+
+                        const priceInput =
+                            row.querySelector('.price-input');
+
+                        const discountPercentInput =
+                            row.querySelector('.discount-percent-input');
+
+                        const stockInput =
+                            row.querySelector('.stock-input');
+
+                        formData.append(
+                            `variations[${index}][size_id]`,
+                            sizeSelect.value
+                        );
+
+                        formData.append(
+                            `variations[${index}][color_id]`,
+                            colorSelect.value
+                        );
+
+                        formData.append(
+                            `variations[${index}][sku]`,
+                            skuInput.value
+                        );
+
+                        formData.append(
+                            `variations[${index}][price]`,
+                            priceInput.value
+                        );
+
+                        formData.append(
+                            `variations[${index}][discount_percent]`,
+                            discountPercentInput.value
+                        );
+
+                        formData.append(
+                            `variations[${index}][stock]`,
+                            stockInput.value
+                        );
+
+                    }
+                );
+
+            }
 
             fetch(url, {
                 method: 'POST',

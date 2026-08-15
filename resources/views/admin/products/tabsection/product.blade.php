@@ -69,127 +69,119 @@
                 </select>
             </div>
 
-
-            <!-- Variation Type 1 -->
-            <div class="col-md-3">
-                <label class="form-label">
-                    Variation Type 1
-                </label>
-
-                <select
-                    name="variation_type_size_id"
-                    class="form-select variationType"
-                >
-                    <option value="">
-                        Select Type
-                    </option>
-
-                    @foreach($variationTypes as $row)
-                    <option value="{{ $row->id }}">
-                        {{ $row->name }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Variation Value 1 -->
-            <div class="col-md-3">
-                <label class="form-label">
-                    Variation Value 1
-                </label>
-
-                <select
-                    name="variation_value_size_id"
-                    class="form-select variationValue"
-                >
-                    <option value="">
-                        Select Value
-                    </option>
-
-                    @foreach($variationValues as $row)
-                        <option
-                            value="{{ $row->id }}"
-                            data-type="{{ strtolower($row->type->name ?? '') }}"
-                        >
-                            {{ $row->value_name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-
-            <!-- Variation Type 2 -->
-            <div class="col-md-3">
-                <label class="form-label">
-                    Variation Type 2
-                </label>
-
-                <select
-                    name="variation_type_color_id"
-                    class="form-select variationType"
-                >
-                    <option value="">
-                        Select Type
-                    </option>
-
-                    @foreach($variationTypes as $row)
-                    <option value="{{ $row->id }}">
-                        {{ $row->name }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Variation Value 2 -->
-            <div class="col-md-3">
-                <label class="form-label">
-                    Variation Value 2
-                </label>
-
-                <select
-                    name="variation_value_color_id"
-                    class="form-select variationValue"
-                >
-                    <option value="">
-                        Select Value
-                    </option>
-
-                    @foreach($variationValues as $row)
-                        <option
-                            value="{{ $row->id }}"
-                            data-type="{{ strtolower($row->type->name ?? '') }}"
-                        >
-                            {{ $row->value_name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-
-            <!-- SKU -->
+            <!-- Product Type -->
             <div class="col-md-4">
                 <label class="form-label">
-                    SKU
+                    Product Type
                 </label>
 
-                <input
-                    type="text"
-                    name="sku"
-                    class="form-control"
+                <select
+                    name="product_type"
+                    id="productType"
+                    class="form-select"
                 >
+                    <option value="">
+                        Select Product Type
+                    </option>
+                    <option value="normal">
+                        Normal Product
+                    </option>
+                    <option value="variable">
+                        Variable Product
+                    </option>
+                </select>
             </div>
 
-            <!-- Stock -->
-            <div class="col-md-4">
-                <label class="form-label">
-                    Stock
-                </label>
+            <!-- Normal Product Fields -->
+            <div id="normalProductFields" style="display: none;">
+                <!-- Price -->
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Price
+                    </label>
 
-                <input
-                    type="number"
-                    name="stock"
-                    class="form-control"
-                >
+                    <input
+                        type="number"
+                        name="price"
+                        class="form-control"
+                        step="0.01"
+                    >
+                </div>
+
+                <!-- SKU -->
+                <div class="col-md-4">
+                    <label class="form-label">
+                        SKU
+                    </label>
+
+                    <input
+                        type="text"
+                        name="sku"
+                        class="form-control"
+                    >
+                </div>
+
+                <!-- Stock -->
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Stock
+                    </label>
+
+                    <input
+                        type="number"
+                        name="stock"
+                        class="form-control"
+                    >
+                </div>
+            </div>
+
+            <!-- Variable Product Fields -->
+            <div id="variableProductFields" style="display: none;">
+                <div class="col-12">
+                    <label class="form-label">
+                        Product Variations
+                    </label>
+
+                    <div id="variationsTableContainer">
+                        <table class="table table-bordered" id="variationTable">
+                            <thead>
+                                <tr>
+                                    <th>Size</th>
+                                    <th>Color</th>
+                                    <th>SKU</th>
+                                    <th>Price</th>
+                                    <th>Discount %</th>
+                                    <th>Discount Amount</th>
+                                    <th>Stock</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Variation rows will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-3">
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary btn-sm me-2"
+                            id="addVariationTypeBtn"
+                            data-variation-types="{{ json_encode($variationTypes) }}"
+                            data-variation-values="{{ json_encode($variationValues) }}"
+                        >
+                            <i class="fas fa-plus"></i> Add Variation Type
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-outline-success btn-sm"
+                            id="generateVariationsBtn"
+                        >
+                            <i class="fas fa-cog"></i> Generate Combinations
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- Delivery Charge -->
